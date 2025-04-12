@@ -1,4 +1,4 @@
-my_dict ={
+my_dict = {
     tuple: (1, 5, 7, None, 'text', False),
     list: [3, 6, 7, None, 'text', False],
     dict: {1: 3, 2: None, 3: 'Texy', 4: False, 5: 1.567},
