@@ -3,7 +3,7 @@
 
 import math
 
-var_c = 20
-var_d = 30
-print((var_c + var_d) / 2)
-print(math.sqrt(var_c * var_d))
+var_c = 12
+var_d = 19
+print((var_c + var_d) / 2) #  среднее арифметическое
+print(math.sqrt(var_c * var_d)) #  среднее геометрическое
