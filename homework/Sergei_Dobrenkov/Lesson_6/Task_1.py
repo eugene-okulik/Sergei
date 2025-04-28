@@ -10,7 +10,8 @@
 import string
 #  print(string.punctuation)
 
-text = "Etiam tincidunt neque erat, quis molestie enim imperdiet vel. Integer urna nisl, facilisis vitae semper at, dignissim vitae libero"
+text = ("Etiam tincidunt neque erat, quis molestie enim imperdiet vel. "
+        "Integer urna nisl, facilisis vitae semper at, dignissim vitae libero")
 words = text.split()  # Разбиваем текст на слова по пробелам.
 new_words = []
 
