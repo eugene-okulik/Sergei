@@ -20,10 +20,10 @@ text2 = 'результат операции: 54'
 text3 = 'результат работы программы: 209'
 text4 = 'результат: 2'
 
-
 def process(text):
     return int(text.split(':')[-1]) + 10
 # return int(text[text.index(':') + 1:]) + 10  # с помощью индексов
+
 
 print(process(text1))
 print(process(text2))
