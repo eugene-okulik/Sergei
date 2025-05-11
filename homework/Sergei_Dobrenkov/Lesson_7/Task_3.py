@@ -25,6 +25,7 @@ def process(text):
     return int(text.split(':')[-1]) + 10
 # return int(text[text.index(':') + 1:]) + 10  # с помощью индексов
 
+
 print(process(text1))
 print(process(text2))
 print(process(text3))
