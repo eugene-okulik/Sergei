@@ -12,13 +12,17 @@ class Book:
 
     def get_info(self):
         if self.reserved:
-            return f'Название: {self.title}, Автор: {self.author}, страниц: {self.pages}, материал: {self.material}, зарезервирована'
+            return (f'Название: {self.title}, Автор: {self.author}, '
+                    f'страниц: {self.pages}, материал: {self.material}, '
+                    f'зарезервирована')
         else:
-            return f'Название: {self.title}, Автор: {self.author}, страниц: {self.pages}, материал: {self.material}'
+            return (f'Название: {self.title}, Автор: {self.author}, '
+                    f'страниц: {self.pages}, материал: {self.material}')
 
 
 class Textbook(Book):
-    def __init__(self, title, author, pages, isbn, subject, school_class, has_exercises, reserved=False):
+    def __init__(self, title, author, pages, isbn, subject, school_class,
+                 has_exercises, reserved=False):
         super().__init__(title, author, pages, isbn, reserved)
         self.subject = subject
         self.school_class = school_class
@@ -26,9 +30,13 @@ class Textbook(Book):
 
     def get_info(self):
         if self.reserved:
-            return f'Название: {self.title}, Автор: {self.author}, страниц: {self.pages}, предмет: {self.subject}, класс: {self.school_class}, зарезервирована'
+            return (f'Название: {self.title}, Автор: {self.author}, '
+                    f'страниц: {self.pages}, предмет: {self.subject}, '
+                    f'класс: {self.school_class}, зарезервирована')
         else:
-            return f'Название: {self.title}, Автор: {self.author}, страниц: {self.pages}, предмет: {self.subject}, класс: {self.school_class}'
+            return (f'Название: {self.title}, Автор: {self.author}, '
+                    f'страниц: {self.pages}, предмет: {self.subject}, '
+                    f'класс: {self.school_class}')
 
 
 # Создание 5 экземпляров книг
