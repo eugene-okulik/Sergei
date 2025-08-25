@@ -1,34 +1,23 @@
 import os
+from datetime import datetime, timedelta
 
-# data_file = open('data.txt', 'r')
-# data_file.read()
-# print('sdfsdf' + 1)
-# data_file.close()
+# строим путь динамически, чтобы код работал в любом окружении
+base_dir = os.path.dirname(__file__)   # папка, где лежит текущий скрипт
+file_path = os.path.join(base_dir, "homework",
+                         "eugene_okulik", "hw_13", "data.txt")
 
-base_path = os.path.dirname(__file__)
-# base_path = 'C:\\users\\username\\projects\\congenial_testers\\homework\\homework\\eugeny_okulik\\Lesson_13'
-# file_path = f'{base_path}/data.txt'
-file_path = os.path.join(base_path, 'data.txt')
-new_file_path = os.path.join(base_path, 'data2.txt')
-print(file_path)
+with open(file_path, "r", encoding="utf-8") as f:
+    lines = f.readlines()
 
+for line in lines:
+    line = line.strip()
+    number, rest = line.split(". ", 1)
+    date_str, instruction = rest.split(" - ", 1)
+    date = datetime.strptime(date_str, "%Y-%m-%d %H:%M:%S.%f")
 
-def read_file():
-    with open(file_path, 'r') as data_file:
-        # print(data_file)
-        for line in data_file.readlines():
-            yield line
-
-
-for data_line in read_file():
-    with open(new_file_path, 'a') as new_file:
-        data_line = data_line.replace('.', '').replace(',', '')
-        new_file.write(data_line)
-
-homework_path = os.path.dirname(os.path.dirname(base_path))
-alina_file_path = os.path.join(homework_path, 'AlinaKravch', 'file.txt')
-print(alina_file_path)
-
-
-with open(alina_file_path) as alina_file:
-    print(alina_file.read())
+    if "неделю позже" in instruction:
+        print(f"{number}: {date + timedelta(weeks=1)}")
+    elif "день недели" in instruction:
+        print(f"{number}: {date.strftime('%A')}")
+    elif "дней назад" in instruction:
+        print(f"{number}: {(datetime.now() - date).days} дней назад")
