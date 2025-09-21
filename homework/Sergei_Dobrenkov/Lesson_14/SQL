@@ -1,15 +1,17 @@
-insert into students (name,second_name, group_id) values ('Sergei', 'Dobrenkov', 21285 );
-insert into `groups` (title, start_date, end_date) values ('Sergei_group','sep 2025', 'oct 2026');
-insert into books (title, taken_by_student_id) values ('Server 2019',21311),('SQL Server 2025 ',21311),('Python 2025 ',21311);
+insert into students (name,second_name) values ('Сергей', 'Добреньков');
+SELECT * FROM students  WHERE name ='Сергей' and second_name='Добреньков';
+insert into books (title, taken_by_student_id) values ('Server 2019',21347),('SQL Server 2025 ',21347),('Python 2025 ',21347);
+SELECT * FROM books where taken_by_student_id = 21347;
+insert into `groups` (title, start_date, end_date) values ('Sergei_group','aug 2025', 'nov 2026');
+SELECT * FROM `groups`  WHERE title = 'Sergei_group';
+update students set group_id = 21315  WHERE id = 21347;
 insert into subjects (title) values ('SQL subject'),('Microsoft subject'), ('Python subject');
 select * from subjects where title = 'SQL subject' or title ='Microsoft subject'  or title = 'Python subject';
 insert into lessons (title, subject_id) values ('lesson 1',12283), ('lesson 2',12283), ('lesson 3',12284),('lesson 4',12284),('lesson 5',12285),('lesson 6',12285);
-SELECT * FROM marks;
-SELECT * FROM students  WHERE name ='Sergei' and second_name='Dobrenkov';
 SELECT id,subject_id FROM lessons WHERE subject_id in (12283,12284,12285);
-insert into marks (value,lesson_id,student_id) values (5,12763,21311),(4,12764,21311),(4,12765,21311),(3,12766,21311),(5,12767,21311),(4,12768,21311);
-SELECT * FROM marks where student_id = 21311;
-SELECT * FROM books where taken_by_student_id = 21311;
+SELECT * FROM marks;
+insert into marks (value,lesson_id,student_id) values (4,12763,21347),(5,12764,21347),(3,12765,21347),(4,12766,21347),(5,12767,21347),(5,12768,21347);
+SELECT * FROM marks where student_id = 21347;
 
 SELECT * FROM students
 join `groups`on students.group_id = `groups`.id
@@ -17,7 +19,7 @@ join books on students.id = books.taken_by_student_id
 join marks on students.id= marks.student_id
 join lessons on lessons.id = marks.lesson_id
 join subjects on subjects.id = lessons.subject_id
-WHERE name ='Sergei' and second_name='Dobrenkov';
+WHERE name ='Сергей' and second_name='Добреньков';
 
 SELECT students.name,students.second_name, groups.title as groups_name, groups.start_date,groups.end_date,books.title as books_title,lessons.title as lessons_title,subjects.title as subjects,marks.value as marks FROM students
 join `groups`on students.group_id = `groups`.id
@@ -25,4 +27,4 @@ join books on students.id = books.taken_by_student_id
 join marks on students.id= marks.student_id
 join lessons on lessons.id = marks.lesson_id
 join subjects on subjects.id = lessons.subject_id
-WHERE name ='Sergei' and second_name='Dobrenkov';
+WHERE name ='Сергей' and second_name='Добреньков';
