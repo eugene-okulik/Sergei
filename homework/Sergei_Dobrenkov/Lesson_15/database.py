@@ -8,7 +8,6 @@ db = mysql.connect(
     database='st-onl'
 )
 
-
 cursor = db.cursor(dictionary=True)
 # 1. Добавляем студента
 cursor.execute(
@@ -93,11 +92,11 @@ cursor.execute("""
 SELECT id, subject_id FROM lessons 
 WHERE subject_id IN (%s, %s, %s )
 ORDER BY subject_id, id
-""",(sql_subject_id, ms_subject_id, py_subject_id))
+""", (sql_subject_id, ms_subject_id, py_subject_id))
 lessons_data = cursor.fetchall()
 print("Lessons:", lessons_data)
 
-#Группируем уроки по subject_id
+# Группируем уроки по subject_id
 lessons_by_subject = {}
 for row in lessons_data:
     subj_id = row["subject_id"]
@@ -125,4 +124,3 @@ print("Marks for student:", cursor.fetchall())
 # Завершение
 db.close()
 print("🎉 All operations completed successfully!")
-
