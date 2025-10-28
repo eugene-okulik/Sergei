@@ -19,7 +19,7 @@ join books on students.id = books.taken_by_student_id
 join marks on students.id= marks.student_id
 join lessons on lessons.id = marks.lesson_id
 join subjects on subjects.id = lessons.subject_id
-WHERE name ='Сергей' and second_name='Добреньков';
+WHERE student_id = 21347;
 
 SELECT students.name,students.second_name, groups.title as groups_name, groups.start_date,groups.end_date,books.title as books_title,lessons.title as lessons_title,subjects.title as subjects,marks.value as marks FROM students
 join `groups`on students.group_id = `groups`.id
@@ -27,4 +27,4 @@ join books on students.id = books.taken_by_student_id
 join marks on students.id= marks.student_id
 join lessons on lessons.id = marks.lesson_id
 join subjects on subjects.id = lessons.subject_id
-WHERE name ='Сергей' and second_name='Добреньков';
+WHERE student_id = 21347;
