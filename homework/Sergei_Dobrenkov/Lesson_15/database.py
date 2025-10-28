@@ -89,7 +89,7 @@ db.commit()
 print("Added lessons")
 
 cursor.execute("""
-SELECT id, subject_id FROM lessons 
+SELECT id, subject_id FROM lessons
 WHERE subject_id IN (%s, %s, %s )
 ORDER BY subject_id, id
 """, (sql_subject_id, ms_subject_id, py_subject_id))
@@ -113,7 +113,7 @@ marks = [
     (5, lessons_by_subject[py_subject_id][1], student_id)
 ]
 cursor.executemany("""
-INSERT INTO marks (value, lesson_id, student_id) 
+INSERT INTO marks (value, lesson_id, student_id)
 VALUES (%s, %s, %s )""", marks)
 db.commit()
 print("Added marks")
