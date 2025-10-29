@@ -12,8 +12,8 @@ cursor = db.cursor(dictionary=True)
 # 1. Добавляем студента
 cursor.execute(
     "INSERT INTO students (name, second_name) VALUES (%s, %s)",
-    ("Сергей", "Добреньков3")
-)
+    ("Сергей", "Добреньков5"))
+db.commit()
 student_id = cursor.lastrowid
 print(f"Added student id={student_id}")
 
@@ -21,10 +21,11 @@ cursor.execute("SELECT * FROM students WHERE id=%s", (student_id,))
 print("Student record:", cursor.fetchone())
 
 # 2. Добавляем группу
-cursor.execute(
-    "INSERT INTO `groups` (title, start_date, end_date) VALUES (%s, %s, %s)",
-    ("Sergei_group", "jun 2025", "dec 2026")
-)
+cursor.execute("""
+INSERT INTO `groups` (title, start_date, end_date)
+VALUES (%s, %s, %s)""",
+               ("Sergei_group", "jun 2025", "dec 2026"))
+db.commit()
 group_id = cursor.lastrowid
 print(f"Added group id={group_id}")
 
@@ -35,7 +36,7 @@ print("Group record:", cursor.fetchone())
 cursor.execute("""
 UPDATE students SET group_id=%s WHERE id=%s""", (group_id, student_id))
 db.commit()
-print("Linked student to group")
+print(f"Linked student {student_id} to group {group_id}")
 
 # 4. Добавляем книги
 books = [
@@ -53,64 +54,50 @@ SELECT * FROM books WHERE taken_by_student_id=%s""", (student_id,))
 print("Books:", cursor.fetchall())
 
 # 5. Добавляем предметы
-subjects = [("SQL subject",), ("Microsoft subject",), ("Python subject",)]
-cursor.executemany("INSERT INTO subjects (title) VALUES (%s)", subjects)
-db.commit()
+subject_titles = ["SQL subject", "Microsoft subject", "Python subject"]
+subject_ids = {}
+for title in subject_titles:
+    cursor.execute("""
+    INSERT INTO subjects (title) VALUES (%s)""", (title,))
+    db.commit()
+    subject_id = cursor.lastrowid
+    subject_ids[title] = subject_id
+    print(f"Added subjects for student: {title}, id={subject_id}")
 
-# Получаем их id по title
-cursor.execute("""
-SELECT id, title FROM subjects
-WHERE title IN ('SQL subject', 'Microsoft subject', 'Python subject')
-""")
-subjects_data = cursor.fetchall()
-print("Subjects:", subjects_data)
-
-# Преобразуем список словарей в словарь "название → id"
-subject_ids = {subj["title"]: subj["id"] for subj in subjects_data}
-
-# Сохраняем id предметов в переменные
-sql_subject_id = subject_ids["SQL subject"]
-ms_subject_id = subject_ids["Microsoft subject"]
-py_subject_id = subject_ids["Python subject"]
-print("Subject IDs:", subject_ids)
+print("Subjects with ID:", subject_ids)
 
 # 6. Добавляем уроки
-lessons = [
-    ("lesson 1", sql_subject_id),
-    ("lesson 2", sql_subject_id),
-    ("lesson 3", ms_subject_id),
-    ("lesson 4", ms_subject_id),
-    ("lesson 5", py_subject_id),
-    ("lesson 6", py_subject_id)
+lessons_to_add = [
+    ("lesson 1", subject_ids["SQL subject"]),
+    ("lesson 2", subject_ids["SQL subject"]),
+    ("lesson 3", subject_ids["Microsoft subject"]),
+    ("lesson 4", subject_ids["Microsoft subject"]),
+    ("lesson 5", subject_ids["Python subject"]),
+    ("lesson 6", subject_ids["Python subject"]),
 ]
-cursor.executemany("""
-INSERT INTO lessons (title, subject_id) VALUES (%s, %s)""", lessons)
-db.commit()
-print("Added lessons")
 
-cursor.execute("""
-SELECT id, subject_id FROM lessons
-WHERE subject_id IN (%s, %s, %s )
-ORDER BY subject_id, id
-""", (sql_subject_id, ms_subject_id, py_subject_id))
-lessons_data = cursor.fetchall()
-print("Lessons:", lessons_data)
+lesson_ids = []
 
-# Группируем уроки по subject_id
-lessons_by_subject = {}
-for row in lessons_data:
-    subj_id = row["subject_id"]
-    lessons_by_subject.setdefault(subj_id, []).append(row["id"])
+for title, subj_id in lessons_to_add:
+    cursor.execute("""
+    INSERT INTO lessons (title, subject_id)
+    VALUES (%s, %s)
+    """, (title, subj_id))
+    db.commit()
+    lesson_id = cursor.lastrowid
+    lesson_ids.append(lesson_id)
+    print(f"Added lessons: {title}, id={lesson_id}, subject_id={subj_id}")
 
-print("Lessons grouped by subject:", lessons_by_subject)
+print("Added lessons with (id):", lesson_ids)
+
 # 7. Добавляем оценки
 marks = [
-    (4, lessons_by_subject[sql_subject_id][0], student_id),
-    (5, lessons_by_subject[sql_subject_id][1], student_id),
-    (3, lessons_by_subject[ms_subject_id][0], student_id),
-    (4, lessons_by_subject[ms_subject_id][1], student_id),
-    (5, lessons_by_subject[py_subject_id][0], student_id),
-    (5, lessons_by_subject[py_subject_id][1], student_id)
+    (4, lesson_ids[0], student_id),
+    (5, lesson_ids[1], student_id),
+    (3, lesson_ids[2], student_id),
+    (4, lesson_ids[3], student_id),
+    (5, lesson_ids[4], student_id),
+    (5, lesson_ids[5], student_id),
 ]
 cursor.executemany("""
 INSERT INTO marks (value, lesson_id, student_id)
@@ -118,9 +105,33 @@ VALUES (%s, %s, %s )""", marks)
 db.commit()
 print("Added marks")
 
-cursor.execute("SELECT * FROM marks WHERE student_id=%s", (student_id,))
+cursor.execute("""
+SELECT * FROM marks WHERE student_id=%s""", (student_id,))
 print("Marks for student:", cursor.fetchall())
 
+# 8. Вся информация о студенте
+cursor.execute("""
+SELECT students.name, students.second_name,
+       groups.title AS group_name, groups.start_date, groups.end_date,
+       books.title AS book_title,
+       lessons.title AS lesson_title,
+       subjects.title AS subject_title,
+       marks.value AS mark
+FROM students
+JOIN `groups` ON students.group_id = groups.id
+JOIN books ON students.id = books.taken_by_student_id
+JOIN marks ON students.id = marks.student_id
+JOIN lessons ON lessons.id = marks.lesson_id
+JOIN subjects ON subjects.id = lessons.subject_id
+WHERE students.id = %s
+""", (student_id,))
+result = cursor.fetchall()
+
+print("\n Вся информация о студенте")
+for row in result:
+    print(row)
+
 # Завершение
+cursor.close()
 db.close()
 print("🎉 All operations completed successfully!")
