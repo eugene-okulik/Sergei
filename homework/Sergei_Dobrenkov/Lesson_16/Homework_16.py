@@ -41,3 +41,4 @@ with open(CSV_PATH, newline="", encoding="utf-8") as file:
             )
 
 db.close()
+
