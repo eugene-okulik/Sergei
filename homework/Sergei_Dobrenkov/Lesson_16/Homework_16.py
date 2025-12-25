@@ -39,6 +39,4 @@ with open(CSV_PATH, newline="", encoding="utf-8") as file:
                 f"В базе нет данных: "
                 f"name='{name}', second_name='{second_name}'"
             )
-
 db.close()
-
