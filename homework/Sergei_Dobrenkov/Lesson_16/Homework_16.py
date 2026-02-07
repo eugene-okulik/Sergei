@@ -16,23 +16,40 @@ db = mysql.connect(
 cursor = db.cursor()
 
 base_dir = os.path.dirname(__file__)
-CSV_PATH = os.path.join(base_dir, "data.csv")
+CSV_PATH = os.path.join(base_dir, "hw_data","data.csv")
 
 with open(CSV_PATH, newline="", encoding="utf-8") as file:
     reader = csv.DictReader(file)
 
     for row in reader:
-        name = row["Name"]
-        second_name = row["last"]
-
         cursor.execute(
             """
             SELECT 1
             FROM students
-            WHERE name = %s AND second_name = %s
+            join `groups`on students.group_id = `groups`.id
+            join books on students.id = books.taken_by_student_id
+            join marks on students.id= marks.student_id
+            join lessons on lessons.id = marks.lesson_id 
+            join subjects on subjects.id = lessons.subject_id
+            WHERE
+                students.name = %s
+                AND students.second_name = %s
+                AND `groups`.title = %s
+                AND books.title = %s
+                AND subjects.title = %s
+                AND lessons.title = %s
+                AND marks.value = %s
             LIMIT 1
             """,
-            (name, second_name)
+            (
+                row["name"],
+                row["second_name"],
+                row["group_title"],
+                row["book_title"],
+                row["subject_title"],
+                row["lesson_title"],
+                row["mark_value"]
+            )
         )
 
         if cursor.fetchone() is None:
