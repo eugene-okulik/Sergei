@@ -15,7 +15,8 @@ db = mysql.connect(
 
 cursor = db.cursor()
 
-CSV_PATH = "/homework/eugene_okulik/Lesson_16/data.csv"
+base_dir = os.path.dirname(__file__)
+CSV_PATH = os.path.join(base_dir, "data.csv")
 
 with open(CSV_PATH, newline="", encoding="utf-8") as file:
     reader = csv.DictReader(file)
