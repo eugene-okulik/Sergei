@@ -15,8 +15,13 @@ db = mysql.connect(
 
 cursor = db.cursor()
 
-base_dir = os.path.dirname(__file__)
-CSV_PATH = os.path.join(base_dir, "hw_data", "data.csv")
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+
+PROJECT_ROOT = os.path.dirname(os.path.dirname(SCRIPT_DIR))
+
+CSV_PATH = os.path.join(PROJECT_ROOT, "eugene_okulik",
+                        "Lesson_16", "hw_data", "data.csv")
+
 
 with open(CSV_PATH, newline="", encoding="utf-8") as file:
     reader = csv.DictReader(file)
@@ -52,9 +57,12 @@ with open(CSV_PATH, newline="", encoding="utf-8") as file:
             )
         )
 
-        if cursor.fetchone() is None:
+        result = cursor.fetchone()
+
+        if result is None:
             print(
-                f"В базе нет данных: "
-                f"name='{name}', second_name='{second_name}'"
+                "В базе нет данных: "
+                f"name={row['name']}, second_name={row['second_name']}, "
+                f"group={row['group_title']}, mark={row['mark_value']}"
             )
 db.close()
