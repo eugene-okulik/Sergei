@@ -34,7 +34,7 @@ with open(CSV_PATH, newline="", encoding="utf-8") as file:
             join `groups`on students.group_id = `groups`.id
             join books on students.id = books.taken_by_student_id
             join marks on students.id= marks.student_id
-            join lessons on lessons.id = marks.lesson_id 
+            join lessons on lessons.id = marks.lesson_id
             join subjects on subjects.id = lessons.subject_id
             WHERE
                 students.name = %s
